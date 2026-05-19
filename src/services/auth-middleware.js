@@ -1,18 +1,18 @@
 import jwt from 'jsonwebtoken';
 
 const mid = (req, res, next) => {
-    // rotas liberadas sem token
     const noAuthRoutes = [
         "/api/user/login",
         "/api/user/register",
     ];
 
-    // liberar login e cadastro
-    if (noAuthRoutes.includes(req.path) && req.method === "POST") {
+    if (
+        req.originalUrl === "/api/user/login" ||
+        req.originalUrl === "/api/user/register"
+    ) {
         return next();
     }
 
-    // pegar header autorizado
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 

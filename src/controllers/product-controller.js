@@ -2,15 +2,11 @@ import Product from "../models/product-model.js";
 
 const controller = {
 
-  /* =========================
-     CRIAR
-  ========================= */
   create: async (req, res) => {
     try {
 
       const { nome, preco, quantidade, categoria } = req.body;
 
-      // VALIDAÇÃO
       if (!nome || preco == null || quantidade == null) {
         return res.status(400).json({
           message: "Nome, preço e quantidade são obrigatórios"
@@ -21,7 +17,7 @@ const controller = {
         nome,
         preco: Number(preco),
         quantidade: Number(quantidade),
-        categoria: categoria || "ALIMENTO" // 🔥 garante categoria
+        categoria: categoria || "ALIMENTO" 
       });
 
       res.status(201).json(product);
@@ -34,9 +30,6 @@ const controller = {
     }
   },
 
-  /* =========================
-     LISTAR TODOS
-  ========================= */
   getAll: async (req, res) => {
     try {
 
@@ -52,9 +45,6 @@ const controller = {
     }
   },
 
-  /* =========================
-     BUSCAR UM
-  ========================= */
   getOne: async (req, res) => {
     try {
 
@@ -76,15 +66,11 @@ const controller = {
     }
   },
 
-  /* =========================
-     ATUALIZAR
-  ========================= */
   updateOne: async (req, res) => {
     try {
 
       const { nome, preco, quantidade, categoria } = req.body;
 
-      // 🔥 monta objeto só com campos enviados
       const updateData = {};
 
       if (nome !== undefined) updateData.nome = nome;
@@ -114,9 +100,6 @@ const controller = {
     }
   },
 
-  /* =========================
-     DELETAR
-  ========================= */
   deleteOne: async (req, res) => {
     try {
 

@@ -3,9 +3,6 @@ import Transaction from "../models/transaction-model.js";
 
 const controller = {
 
-    /* =========================
-       CRIAR CLIENTE
-    ========================= */
     create: async (req, res) => {
         try {
 
@@ -43,9 +40,6 @@ const controller = {
         }
     },
 
-    /* =========================
-       BUSCAR CLIENTE POR CÓDIGO
-    ========================= */
     getByCodigo: async (req, res) => {
 
         try {
@@ -73,10 +67,6 @@ const controller = {
 
     },
 
-    /* =========================
-       RECARREGAR SALDO
-       (OPERAÇÃO ATÔMICA)
-    ========================= */
     recharge: async (req, res) => {
 
         try {
@@ -124,10 +114,6 @@ const controller = {
 
     },
 
-    /* =========================
-       DEBITAR SALDO
-       (OPERAÇÃO ATÔMICA)
-    ========================= */
     debit: async (req, res) => {
 
         try {
@@ -182,9 +168,6 @@ const controller = {
 
     },
 
-    /* =========================
-       HISTÓRICO DE TRANSAÇÕES
-    ========================= */
     getHistory: async (req, res) => {
 
         try {

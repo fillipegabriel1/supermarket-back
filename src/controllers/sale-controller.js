@@ -20,12 +20,9 @@ const controller = {
 
       let total = 0;
 
-      /* =========================
-         VALIDAR E CALCULAR
-      ========================= */
       for (const item of itens) {
 
-        const produto = await Product.findById(item._id); // ✅ CORRIGIDO
+        const produto = await Product.findById(item._id);
 
         if (!produto) {
           return res.status(404).json({
@@ -48,15 +45,9 @@ const controller = {
         });
       }
 
-      /* =========================
-         DEBITAR SALDO
-      ========================= */
       client.saldo -= total;
       await client.save();
 
-      /* =========================
-         BAIXAR ESTOQUE
-      ========================= */
       for (const item of itens) {
 
         const produto = await Product.findById(item._id);
@@ -65,9 +56,6 @@ const controller = {
         await produto.save();
       }
 
-      /* =========================
-         TRANSAÇÃO
-      ========================= */
       await Transaction.create({
         clienteId: client._id,
         tipo: "DEBITO",
@@ -93,4 +81,4 @@ const controller = {
 
 };
 
-export default controller;
+export default controller;  

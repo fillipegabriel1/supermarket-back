@@ -1,5 +1,4 @@
-import Client from "../models/client-model.js";
-import Transaction from "../models/transaction-model.js";
+import Product from "../models/product-model.js";
 
 const controller = {
 
@@ -7,35 +6,47 @@ const controller = {
 
     try {
 
-      // 💰 TOTAL RECARGA
-      const totalRecarga = await Transaction.aggregate([
-        { $match: { tipo: "CREDITO" } },
-        { $group: { _id: null, total: { $sum: "$valor" } } }
+      // 📦 TOTAL PRODUTOS
+      const totalProdutos = await Product.countDocuments();
+
+      // 📦 TOTAL ITENS EM ESTOQUE
+      const estoqueTotal = await Product.aggregate([
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$quantidade" }
+          }
+        }
       ]);
 
-      // 💸 TOTAL DEBITO
-      const totalDebito = await Transaction.aggregate([
-        { $match: { tipo: "DEBITO" } },
-        { $group: { _id: null, total: { $sum: "$valor" } } }
+      // 💰 VALOR TOTAL ESTOQUE
+      const valorEstoque = await Product.aggregate([
+        {
+          $group: {
+            _id: null,
+            total: {
+              $sum: {
+                $multiply: ["$preco", "$quantidade"]
+              }
+            }
+          }
+        }
       ]);
 
-      // 🏦 SALDO TOTAL DOS CLIENTES
-      const saldoBodega = await Client.aggregate([
-        { $group: { _id: null, total: { $sum: "$saldo" } } }
-      ]);
+      // ⚠️ ESTOQUE BAIXO
+      const estoqueBaixo = await Product.countDocuments({
+        quantidade: { $lt: 5 }
+      });
 
-      // 👥 CLIENTES
-      const clientes = await Client.countDocuments();
-
-      // 🔄 TRANSAÇÕES
-      const transacoes = await Transaction.countDocuments();
+      // 🗂️ TOTAL CATEGORIAS
+      const categorias = await Product.distinct("categoria");
 
       res.json({
-        totalRecarga: totalRecarga[0]?.total || 0,
-        totalDebito: totalDebito[0]?.total || 0,
-        saldoBodega: saldoBodega[0]?.total || 0,
-        clientes,
-        transacoes
+        totalProdutos,
+        estoqueTotal: estoqueTotal[0]?.total || 0,
+        valorEstoque: valorEstoque[0]?.total || 0,
+        estoqueBaixo,
+        categorias: categorias.length
       });
 
     } catch (error) {
